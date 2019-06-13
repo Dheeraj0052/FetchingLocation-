@@ -13,17 +13,29 @@ import android.support.v7.app.AlertDialog
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import com.google.android.gms.maps.model.LatLng
+import com.google.maps.android.heatmaps.WeightedLatLng
 import kotlinx.android.synthetic.main.activity_main.*
 import java.util.*
+import com.google.maps.android.SphericalUtil
+
+
 
 class MainActivity : AppCompatActivity() , LocationListener{
 
-
+var loc =LatLng(0.00,0.00)//currentlocation
+    val loc2 =LatLng(28.592544,77.044104)//dashratpuri metro statio
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
     val mylocationmanager =getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
+        btndis.setOnClickListener(object :View.OnClickListener{
+            override fun onClick(v: View?) {
+                val dis =distanceBetween(loc,loc2)
+                Log.e("tag",dis.toString())
+            }
+        })
     BtnFetch.setOnClickListener(object : View.OnClickListener{
         @SuppressLint("MissingPermission")
         override fun onClick(v: View?) {
@@ -44,11 +56,16 @@ class MainActivity : AppCompatActivity() , LocationListener{
             } else {
                 mylocationmanager.
                     requestSingleUpdate(LocationManager.GPS_PROVIDER,this@MainActivity,null)
-                mylocationmanager
-            }}
+
+            }
+
+        }
+
     })
 
     }
+
+
     override fun onLocationChanged(location: Location?) {
 
 
@@ -57,6 +74,8 @@ class MainActivity : AppCompatActivity() , LocationListener{
             Toast.makeText(baseContext,""+it.latitude.toString(),Toast.LENGTH_LONG).show()
             Toast.makeText(baseContext,""+it.longitude.toString(),Toast.LENGTH_LONG).show()
             Log.e("tag",it.latitude.toString())
+             loc =LatLng(it.latitude,it.longitude)
+    //        loc1= loc
             Log.e("Tag",it.longitude.toString())
 
         }
@@ -71,5 +90,10 @@ class MainActivity : AppCompatActivity() , LocationListener{
     override fun onProviderDisabled(provider: String?) {
     }
 
+    fun distanceBetween(point1: LatLng?, point2: LatLng?): Double? {
+        return if (point1 == null || point2 == null) {
+            null
+        } else SphericalUtil.computeDistanceBetween(point1, point2)
 
+    }
 }
