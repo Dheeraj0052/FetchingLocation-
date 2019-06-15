@@ -30,12 +30,22 @@ var loc =LatLng(0.00,0.00)//currentlocation
         setContentView(R.layout.activity_main)
     val mylocationmanager =getSystemService(Context.LOCATION_SERVICE) as LocationManager
 
-        btndis.setOnClickListener(object :View.OnClickListener{
+//        btndis.setOnClickListener(object :View.OnClickListener{     code
+//            override fun onClick(v: View?) {                         for
+//                val dis =distanceBetween(loc,loc2)                    finding distance btw two lat long
+//                Log.e("tag",dis.toString())
+//            }
+//        })
+
+        btnlocate.setOnClickListener(object :View.OnClickListener{
             override fun onClick(v: View?) {
-                val dis =distanceBetween(loc,loc2)
-                Log.e("tag",dis.toString())
-            }
+                val intent =Intent(baseContext,MapsActivity::class.java)
+                intent.putExtra("lat",loc.latitude)
+                intent.putExtra("long",loc.longitude)
+
+                startActivity(intent);            }
         })
+
     BtnFetch.setOnClickListener(object : View.OnClickListener{
         @SuppressLint("MissingPermission")
         override fun onClick(v: View?) {
